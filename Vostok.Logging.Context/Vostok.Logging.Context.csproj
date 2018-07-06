@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Configurations>Debug;Release</Configurations>
+    <LangVersion>7.2</LangVersion>
+    <NuspecFile>Vostok.Logging.Context.nuspec</NuspecFile>
+    <Version>1.0.0</Version>
+    <Authors>Vostok team</Authors>
+    <Company>SKB Kontur</Company>
+    <Product>Vostok</Product>
+    <Copyright>Copyright (c) 2017-2018 SKB Kontur</Copyright>
+    <PackageProjectUrl>https://github.com/vostok/logging.context</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/vostok/logging.context/blob/master/LICENSE</PackageLicenseUrl>
+    <Description>Logging context library for microservice toolkit http://vostok.tools/</Description>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILRepack" Version="2.0.15" />
+    <PackageReference Include="System.Collections.Immutable" Version="1.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Vostok.Context">
+      <HintPath>..\..\vostok.context\Vostok.Context\bin\Release\netstandard2.0\Vostok.Context.dll</HintPath>
+    </Reference>
+    <Reference Include="Vostok.Logging.Abstractions">
+      <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\netstandard2.0\Vostok.Logging.Abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <Target Name="RepackAssemblies" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <ItemGroup>
+      <MergeAssemblies Include="$(AssemblyName).dll" />
+      <MergeAssemblies Include="$(USERPROFILE)\.nuget\packages\system.collections.immutable\1.5.0\lib\netstandard2.0\System.Collections.Immutable.dll" />
+    </ItemGroup>
+    <Exec WorkingDirectory="$(ProjectDir)$(OutputPath)" Command="$(ILRepack) /internalize /log:ilrepack.log /out:Merged\$(AssemblyName).dll @(MergeAssemblies, ' ')" />
+  </Target>
+</Project>
