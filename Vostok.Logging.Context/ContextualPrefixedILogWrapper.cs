@@ -1,41 +1,36 @@
 using System.Collections.Immutable;
 using System.Linq;
+using JetBrains.Annotations;
 using Vostok.Context;
 using Vostok.Logging.Abstractions;
 
 namespace Vostok.Logging.Context
 {
-    /// <summary>
-    /// This only works well on .NET 4.5 and later. Avoid using contextual prefixes with older runtime versions.
-    /// </summary>
     public class ContextualPrefixedILogWrapper : IILogWrapper
     {
-        public ContextualPrefixedILogWrapper(ILog log) => BaseLog = log;
+        public const string PrefixPropertyName = "prefix";
+
+        public ContextualPrefixedILogWrapper([NotNull] ILog log) => BaseLog = log;
 
         public ILog BaseLog { get; }
 
-        // public string Prefix => LoggingContext.Prefix;
+        public string Prefix
+        {
+            get
+            {
+                var prefix = FlowingContext.Get<ImmutableArray<string>>(ContextualLogPrefix.PrefixKey);
+                return prefix.IsEmpty ? null : prefix.Last();
+            }
+        }
 
         public void Log(LogEvent @event)
         {
-            var prefix = FlowingContext.Get<ImmutableArray<string>>(ContextualLogPrefix.PrefixKey);
+            var prefix = Prefix;
 
-            if (!prefix.IsEmpty)
-                @event = @event.WithProperty("prefix", prefix.Last());
+            if (@event != null && prefix != null)
+                @event = @event.WithProperty(PrefixPropertyName, prefix);
 
             BaseLog.Log(@event);
-
-            //
-
-            /*using (new ContextualLogPrefix("P1"))
-            {
-                log.Info("msg"); // [P1] msg
-
-                using (new ContextualLogPrefix("P2"))
-                {
-                    log.Info("msg"); // [P1] [P2] msg
-                }
-            }*/
         }
 
         public bool IsEnabledFor(LogLevel level) => BaseLog.IsEnabledFor(level);

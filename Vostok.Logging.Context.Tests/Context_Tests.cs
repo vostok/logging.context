@@ -44,7 +44,7 @@ namespace Vostok.Logging.Context.Tests
         }
 
         [Test]
-        public void Contextual_log_test()
+        public void Contextual_log()
         {
             const string prefix = "test";
             var messages = new[] {"Hello, World 1", "Hello, World 2"};
@@ -62,7 +62,7 @@ namespace Vostok.Logging.Context.Tests
         }
 
         [Test]
-        public void Contextual_log_test_2()
+        public void Contextual_log_with_subcontext()
         {
             const string prefix1 = "test1";
             const string prefix2 = "test2";
@@ -95,23 +95,6 @@ namespace Vostok.Logging.Context.Tests
             settings = settingsPatch;
             FileLog.FileLog.Configure(settings);
             WaitForOperationCanceled();
-        }
-
-        private void UpdateSettings(Action<FileLogSettings> settingsPatch)
-        {
-            var copy = new FileLogSettings
-            {
-                FilePath = settings.FilePath,
-                ConversionPattern = settings.ConversionPattern,
-                EnableRolling = settings.EnableRolling,
-                AppendToFile = settings.AppendToFile,
-                Encoding = settings.Encoding,
-                EventsQueueCapacity = settings.EventsQueueCapacity
-            };
-
-            settingsPatch(copy);
-
-            UpdateSettings(copy);
         }
 
         private static FileLogSettings TempFileSettings => new FileLogSettings
