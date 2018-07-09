@@ -34,5 +34,10 @@ namespace Vostok.Logging.Context
         }
 
         public bool IsEnabledFor(LogLevel level) => BaseLog.IsEnabledFor(level);
+
+        public ILog ForContext(string context)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
