@@ -10,7 +10,9 @@ sdk *default:
 
   deps:
 	- vostok.context@dev
+	- vostok.commons@dev
 	- vostok.logging.abstractions@dev
+	- vostok.logging.context@dev
 
 full-build > sdk:
   build:
