@@ -14,20 +14,14 @@ namespace Vostok.Logging.Context
 
         public ILog BaseLog { get; }
 
-        public string Prefix
-        {
-            get
-            {
-                var prefix = FlowingContext.Get<ImmutableArray<string>>(ContextualLogPrefix.PrefixKey);
-                return prefix.IsDefaultOrEmpty ? null : prefix.Last();
-            }
-        }
+        public static ImmutableArray<string> Prefix =>
+            FlowingContext.Get<ImmutableArray<string>>(ContextualLogPrefix.PrefixKey);
 
         public void Log(LogEvent @event)
         {
             var prefix = Prefix;
 
-            if (@event != null && prefix != null)
+            if (@event != null && prefix != null && !prefix.IsDefaultOrEmpty)
                 @event = @event.WithProperty(PrefixPropertyName, prefix);
 
             BaseLog.Log(@event);

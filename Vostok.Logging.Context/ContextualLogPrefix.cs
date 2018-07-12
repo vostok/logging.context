@@ -16,7 +16,7 @@ namespace Vostok.Logging.Context
             FlowingContext.SetOverwriteMode(true);
             this.needRestoreContext = needRestoreContext;
             oldPrefix = FlowingContext.Get<ImmutableArray<string>>(PrefixKey);
-            var newPrefix = oldPrefix.IsDefault ? ImmutableArray<string>.Empty.Add(prefix) : oldPrefix.Add(prefix);
+            var newPrefix = oldPrefix.IsDefaultOrEmpty ? ImmutableArray<string>.Empty.Add(prefix) : oldPrefix.Add(prefix);
             FlowingContext.Set(PrefixKey, newPrefix);
         }
 
@@ -25,7 +25,10 @@ namespace Vostok.Logging.Context
             if (needRestoreContext)
             {
                 FlowingContext.SetOverwriteMode(true);
-                FlowingContext.Set(PrefixKey, oldPrefix);
+                if (!oldPrefix.IsDefaultOrEmpty)
+                    FlowingContext.Set(PrefixKey, oldPrefix);
+                else
+                    FlowingContext.Remove(PrefixKey);
             }
         }
     }
