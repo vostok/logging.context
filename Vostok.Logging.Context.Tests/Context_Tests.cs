@@ -81,6 +81,19 @@ namespace Vostok.Logging.Context.Tests
             ReadAllLines(settings.FilePath).Should().BeEquivalentTo(contextMessages);
         }
 
+        [Test]
+        public void Contextual_log_without_prefix_should_work_as_usual_log()
+        {
+            const string msg = "test message";
+
+            var contextualLog = log.WithContextualPrefix();
+            contextualLog.Info(msg);
+
+            WaitForOperationCanceled();
+            createdFiles.Add(settings.FilePath);
+            ReadAllLines(settings.FilePath).Should().BeEquivalentTo(msg);
+        }
+
         private static void WaitForOperationCanceled() => Thread.Sleep(300);
 
         private static IEnumerable<string> ReadAllLines(string fileName)
