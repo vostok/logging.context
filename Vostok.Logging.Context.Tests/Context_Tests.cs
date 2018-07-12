@@ -25,7 +25,7 @@ namespace Vostok.Logging.Context.Tests
             settings = new FileLogSettings
             {
                 FilePath = $"{Guid.NewGuid().ToString().Substring(0, 8)}.log",
-                ConversionPattern = ConversionPattern.FromString("%m%n"),
+                ConversionPattern = ConversionPattern.FromString("%x %m%n"),
                 EnableRolling = false,
                 AppendToFile = true,
                 Encoding = Encoding.UTF8
@@ -47,7 +47,7 @@ namespace Vostok.Logging.Context.Tests
         public void Contextual_log()
         {
             const string prefix = "test";
-            var messages = new[] {"Hello, World 1", "Hello, World 2"};
+            var messages = new[] { "Hello, World 1", "Hello, World 2" };
             var contextMessages = messages.Select(m => $"[{prefix}] {m}").ToArray();
 
             var contextualLog = log.WithContextualPrefix();
@@ -67,7 +67,7 @@ namespace Vostok.Logging.Context.Tests
             const string prefix1 = "test1";
             const string prefix2 = "test2";
             var messages = new[] {"Hello, World 1", "Hello, World 2"};
-            var contextMessages = new[] {$"[{prefix1}] {messages[0]}", $"[{prefix2}] {messages[1]}" };
+            var contextMessages = new[] {$"[{prefix1}] {messages[0]}", $"[{prefix1}] [{prefix2}] {messages[1]}" };
 
             var contextualLog = log.WithContextualPrefix();
             using (new ContextualLogPrefix(prefix1))
@@ -91,7 +91,23 @@ namespace Vostok.Logging.Context.Tests
 
             WaitForOperationCanceled();
             createdFiles.Add(settings.FilePath);
-            ReadAllLines(settings.FilePath).Should().BeEquivalentTo(msg);
+            ReadAllLines(settings.FilePath).Should().BeEquivalentTo($"{string.Empty} {msg}");
+        }
+
+        [Test]
+        public void Should_write_first_log_with_context_others_without()
+        {
+            const string msg = "test message";
+            const string prefix = "prefix";
+
+            var contextualLog = log.WithContextualPrefix();
+            using (new ContextualLogPrefix(prefix))
+                contextualLog.Info(msg);
+            contextualLog.Info(msg);
+
+            WaitForOperationCanceled();
+            createdFiles.Add(settings.FilePath);
+            ReadAllLines(settings.FilePath).Should().BeEquivalentTo($"[{prefix}] {msg}", $"{string.Empty} {msg}");
         }
 
         private static void WaitForOperationCanceled() => Thread.Sleep(300);
