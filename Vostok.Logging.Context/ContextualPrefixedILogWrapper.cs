@@ -19,7 +19,7 @@ namespace Vostok.Logging.Context
             get
             {
                 var prefix = FlowingContext.Get<ImmutableArray<string>>(ContextualLogPrefix.PrefixKey);
-                return prefix.IsEmpty ? null : prefix.Last();
+                return prefix.IsDefaultOrEmpty ? null : prefix.Last();
             }
         }
 
