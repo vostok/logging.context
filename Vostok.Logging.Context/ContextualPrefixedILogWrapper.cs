@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Linq;
 using JetBrains.Annotations;
 using Vostok.Context;
 using Vostok.Logging.Abstractions;

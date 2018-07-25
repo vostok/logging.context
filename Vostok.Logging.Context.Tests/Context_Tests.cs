@@ -6,17 +6,17 @@ using System.Text;
 using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
-using Vostok.Logging.Abstractions;
-using Vostok.Logging.Core.Configuration;
-using Vostok.Logging.FileLog;
+using Vostok.Logging.Core.ConversionPattern;
+using Vostok.Logging.File;
+using Vostok.Logging.File.Configuration;
 
 namespace Vostok.Logging.Context.Tests
 {
     [TestFixture]
     public class Context_Tests
     {
-        private FileLogSettings settings;
-        private readonly FileLog.FileLog log = new FileLog.FileLog();
+        /*private FileLogSettings settings;
+        private readonly FileLog log = new FileLog(TempFileSettings);
         private readonly List<string> createdFiles = new List<string>(2);
 
         [SetUp]
@@ -25,9 +25,8 @@ namespace Vostok.Logging.Context.Tests
             settings = new FileLogSettings
             {
                 FilePath = $"{Guid.NewGuid().ToString().Substring(0, 8)}.log",
-                ConversionPattern = ConversionPattern.FromString("%x %m%n"),
-                EnableRolling = false,
-                AppendToFile = true,
+                ConversionPattern = ConversionPatternParser.Parse("%x %m%n"),
+                RollingStrategy = new FileLogSettings.RollingStrategyOptions(),
                 Encoding = Encoding.UTF8
             };
 
@@ -114,7 +113,7 @@ namespace Vostok.Logging.Context.Tests
 
         private static IEnumerable<string> ReadAllLines(string fileName)
         {
-            using (var file = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var file = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var reader = new StreamReader(file))
                 return reader.ReadToEnd().Split(Environment.NewLine.ToArray()).Where(s => !string.IsNullOrEmpty(s));
         }
@@ -122,15 +121,15 @@ namespace Vostok.Logging.Context.Tests
         private void UpdateSettings(FileLogSettings settingsPatch)
         {
             settings = settingsPatch;
-            FileLog.FileLog.Configure(settings);
+            FileLog.Configure(settings);
             WaitForOperationCanceled();
         }
 
         private static FileLogSettings TempFileSettings => new FileLogSettings
         {
             FilePath = "temp",
-            EnableRolling = false,
-            ConversionPattern = ConversionPattern.FromString(string.Empty)
+            RollingStrategy = new FileLogSettings.RollingStrategyOptions(),
+            ConversionPattern = ConversionPatternParser.Parse(string.Empty)
         };
 
         private static void DeleteFile(string fileName)
@@ -138,8 +137,8 @@ namespace Vostok.Logging.Context.Tests
             while (true)
                 try
                 {
-                    if (File.Exists(fileName))
-                        File.Delete(fileName);
+                    if (System.IO.File.Exists(fileName))
+                        System.IO.File.Delete(fileName);
 
                     break;
                 }
@@ -147,6 +146,6 @@ namespace Vostok.Logging.Context.Tests
                 {
                     WaitForOperationCanceled();
                 }
-        }
+        }*/
     }
 }
