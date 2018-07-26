@@ -1,14 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using FluentAssertions;
 using NUnit.Framework;
-using Vostok.Logging.Core.ConversionPattern;
-using Vostok.Logging.File;
-using Vostok.Logging.File.Configuration;
 
 namespace Vostok.Logging.Context.Tests
 {

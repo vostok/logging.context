@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Collections.Immutable;
+using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Vostok.Context;
 
@@ -9,27 +10,32 @@ namespace Vostok.Logging.Context
     {
         public const string PrefixKey = "logging.prefix";
         private readonly bool needRestoreContext;
-        private readonly ImmutableArray<string> oldPrefix;
+        private readonly IReadOnlyList<string> oldPrefix;
 
         public ContextualLogPrefix([NotNull] string prefix, bool needRestoreContext = true)
         {
             FlowingContext.SetOverwriteMode(true);
             this.needRestoreContext = needRestoreContext;
-            oldPrefix = FlowingContext.Get<ImmutableArray<string>>(PrefixKey);
-            var newPrefix = oldPrefix.IsDefaultOrEmpty ? ImmutableArray<string>.Empty.Add(prefix) : oldPrefix.Add(prefix);
+            oldPrefix = FlowingContext.Get<IReadOnlyList<string>>(PrefixKey);
+            IReadOnlyList<string> newPrefix = null;
+            if (oldPrefix == null || oldPrefix.Count == 0)
+                newPrefix = new[] {prefix};
+            else
+            {
+                var list = oldPrefix.ToList();
+                list.Add(prefix);
+                newPrefix = list;
+            }
             FlowingContext.Set(PrefixKey, newPrefix);
         }
 
         public void Dispose()
         {
-            if (needRestoreContext)
-            {
-                FlowingContext.SetOverwriteMode(true);
-                if (!oldPrefix.IsDefaultOrEmpty)
-                    FlowingContext.Set(PrefixKey, oldPrefix);
-                else
-                    FlowingContext.Remove(PrefixKey);
-            }
+            FlowingContext.SetOverwriteMode(true);
+            if (needRestoreContext && oldPrefix != null && oldPrefix.Count > 0)
+                FlowingContext.Set(PrefixKey, oldPrefix);
+            else
+                FlowingContext.Remove(PrefixKey);
         }
     }
 }
