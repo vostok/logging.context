@@ -6,11 +6,11 @@ notests *default:
       name: dotnet
 
   install:
-	- Vostok.Logging.Context/bin/Release/netstandard2.0/Vostok.Logging.Context.dll
+    - Vostok.Logging.Context/bin/Release/netstandard2.0/Vostok.Logging.Context.dll
 
   deps:
-	- vostok.context@dev
-	- vostok.logging.abstractions@dev
+    - vostok.context@dev
+    - vostok.logging.abstractions@dev
 
 full-build > notests:
   deps:
