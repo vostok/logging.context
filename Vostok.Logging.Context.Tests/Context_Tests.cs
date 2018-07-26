@@ -1,12 +1,22 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using FluentAssertions;
 using NUnit.Framework;
+using Vostok.Logging.Abstractions;
+using Vostok.Logging.Core.ConversionPattern;
+using Vostok.Logging.FileLog.Configuration;
 
 namespace Vostok.Logging.Context.Tests
 {
     [TestFixture]
     public class Context_Tests
     {
-        /*private FileLogSettings settings;
-        private readonly FileLog log = new FileLog(TempFileSettings);
+        private FileLogSettings settings;
+        private FileLog.FileLog log = new FileLog.FileLog(TempFileSettings);
         private readonly List<string> createdFiles = new List<string>(2);
 
         [SetUp]
@@ -103,7 +113,9 @@ namespace Vostok.Logging.Context.Tests
 
         private static IEnumerable<string> ReadAllLines(string fileName)
         {
-            using (var file = System.IO.File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            WaitForOperationCanceled();
+            WaitForOperationCanceled();
+            using (var file = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
             using (var reader = new StreamReader(file))
                 return reader.ReadToEnd().Split(Environment.NewLine.ToArray()).Where(s => !string.IsNullOrEmpty(s));
         }
@@ -111,8 +123,23 @@ namespace Vostok.Logging.Context.Tests
         private void UpdateSettings(FileLogSettings settingsPatch)
         {
             settings = settingsPatch;
-            FileLog.Configure(settings);
+            log = new FileLog.FileLog(settings);
             WaitForOperationCanceled();
+        }
+
+        private void UpdateSettings(Action<FileLogSettings> settingsPatch)
+        {
+            var copy = new FileLogSettings
+            {
+                FilePath = settings.FilePath,
+                ConversionPattern = settings.ConversionPattern,
+                Encoding = settings.Encoding,
+                EventsQueueCapacity = settings.EventsQueueCapacity
+            };
+
+            settingsPatch(copy);
+
+            UpdateSettings(copy);
         }
 
         private static FileLogSettings TempFileSettings => new FileLogSettings
@@ -127,8 +154,8 @@ namespace Vostok.Logging.Context.Tests
             while (true)
                 try
                 {
-                    if (System.IO.File.Exists(fileName))
-                        System.IO.File.Delete(fileName);
+                    if (File.Exists(fileName))
+                        File.Delete(fileName);
 
                     break;
                 }
@@ -136,6 +163,75 @@ namespace Vostok.Logging.Context.Tests
                 {
                     WaitForOperationCanceled();
                 }
-        }*/
+        }
+
+        [Test]
+        public void FileLog_with_context()
+        {
+            var messages = new[] { "Hello, World 1", "Hello, World 2" };
+
+            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%x %m%n"));
+
+            var conLog = new ContextualPrefixedILogWrapper(log);
+            using (new ContextualLogPrefix("prefix1"))
+                conLog.Info(messages[0], new { trace = 134 });
+            WaitForOperationCanceled();
+
+            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%l %x %p(trace) %m%n"));
+
+            using (new ContextualLogPrefix("prefix2"))
+                conLog.Info(messages[1], new { trace = 134 });
+            WaitForOperationCanceled();
+
+            createdFiles.Add(settings.FilePath);
+
+            ReadAllLines(settings.FilePath).Should().BeEquivalentTo($"[prefix1] {messages[0]}", $"Info [prefix2] 134 {messages[1]}");
+        }
+
+        [Test]
+        public void FileLog_with_subcontext()
+        {
+            var messages = new[] { "Hello, World 1", "Hello, World 2" };
+            
+            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%x %m%n"));
+
+            var conLog = new ContextualPrefixedILogWrapper(log);
+            using (new ContextualLogPrefix("prefix1"))
+            using (new ContextualLogPrefix("prefix1.1"))
+                conLog.Info(messages[0], new { trace = 134 });
+            WaitForOperationCanceled();
+
+            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%l %x %p(trace) %m%n"));
+
+            using (new ContextualLogPrefix("prefix2"))
+            using (new ContextualLogPrefix("prefix2.2"))
+                conLog.Info(messages[1], new { trace = 134 });
+            WaitForOperationCanceled();
+
+            createdFiles.Add(settings.FilePath);
+
+            ReadAllLines(settings.FilePath).Should().BeEquivalentTo($"[prefix1] [prefix1.1] {messages[0]}", $"Info [prefix2] [prefix2.2] 134 {messages[1]}");
+        }
+
+        [Test]
+        public void FileLog_with_and_without_context()
+        {
+            var messages = new[] { "Hello, World 1", "Hello, World 2" };
+
+            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%x %m%n"));
+
+            var conLog = new ContextualPrefixedILogWrapper(log);
+            using (new ContextualLogPrefix("prefix"))
+                conLog.Info(messages[0], new { trace = 134 });
+            WaitForOperationCanceled();
+
+            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%l %x %p(trace) %m%n"));
+
+            conLog.Info(messages[1], new { trace = 134 });
+            WaitForOperationCanceled();
+
+            createdFiles.Add(settings.FilePath);
+            ReadAllLines(settings.FilePath).Should().BeEquivalentTo($"[prefix] {messages[0]}", $"Info 134 {messages[1]}");
+        }
     }
 }
