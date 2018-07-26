@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Vostok.Context;
 using Vostok.Logging.Abstractions;
@@ -13,14 +13,14 @@ namespace Vostok.Logging.Context
 
         public ILog BaseLog { get; }
 
-        public static ImmutableArray<string> Prefix =>
-            FlowingContext.Get<ImmutableArray<string>>(ContextualLogPrefix.PrefixKey);
+        public static IReadOnlyList<string> Prefix =>
+            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey);
 
         public void Log(LogEvent @event)
         {
             var prefix = Prefix;
 
-            if (@event != null && prefix != null && !prefix.IsDefaultOrEmpty)
+            if (@event != null && prefix != null && prefix.Count > 0)
                 @event = @event.WithProperty(PrefixPropertyName, prefix);
 
             BaseLog.Log(@event);
@@ -28,9 +28,6 @@ namespace Vostok.Logging.Context
 
         public bool IsEnabledFor(LogLevel level) => BaseLog.IsEnabledFor(level);
 
-        public ILog ForContext(string context)
-        {
-            throw new System.NotImplementedException();
-        }
+        public ILog ForContext(string context) => throw new System.NotImplementedException();
     }
 }
