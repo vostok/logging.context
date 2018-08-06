@@ -7,8 +7,8 @@ using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using Vostok.Logging.Abstractions;
-using Vostok.Logging.Core.ConversionPattern;
 using Vostok.Logging.FileLog.Configuration;
+using Vostok.Logging.Formatting;
 
 namespace Vostok.Logging.Context.Tests
 {
@@ -25,7 +25,7 @@ namespace Vostok.Logging.Context.Tests
             settings = new FileLogSettings
             {
                 FilePath = $"{Guid.NewGuid().ToString().Substring(0, 8)}.log",
-                ConversionPattern = ConversionPatternParser.Parse("%x %m%n"),
+                OutputTemplate = OutputTemplate.Parse("%x %m%n"),
                 RollingStrategy = new FileLogSettings.RollingStrategyOptions(),
                 Encoding = Encoding.UTF8
             };
@@ -132,7 +132,7 @@ namespace Vostok.Logging.Context.Tests
             var copy = new FileLogSettings
             {
                 FilePath = settings.FilePath,
-                ConversionPattern = settings.ConversionPattern,
+                OutputTemplate = settings.OutputTemplate,
                 Encoding = settings.Encoding,
                 EventsQueueCapacity = settings.EventsQueueCapacity
             };
@@ -146,7 +146,7 @@ namespace Vostok.Logging.Context.Tests
         {
             FilePath = "temp",
             RollingStrategy = new FileLogSettings.RollingStrategyOptions(),
-            ConversionPattern = ConversionPatternParser.Parse(string.Empty)
+            OutputTemplate = OutputTemplate.Parse(string.Empty)
         };
 
         private static void DeleteFile(string fileName)
@@ -170,14 +170,14 @@ namespace Vostok.Logging.Context.Tests
         {
             var messages = new[] { "Hello, World 1", "Hello, World 2" };
 
-            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%x %m%n"));
+            UpdateSettings(s => s.OutputTemplate = OutputTemplate.Parse("%x %m%n"));
 
             var conLog = new ContextualPrefixedILogWrapper(log);
             using (new ContextualLogPrefix("prefix1"))
                 conLog.Info(messages[0], new { trace = 134 });
             WaitForOperationCanceled();
 
-            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%l %x %p(trace) %m%n"));
+            UpdateSettings(s => s.OutputTemplate = OutputTemplate.Parse("%l %x %p(trace) %m%n"));
 
             using (new ContextualLogPrefix("prefix2"))
                 conLog.Info(messages[1], new { trace = 134 });
@@ -193,7 +193,7 @@ namespace Vostok.Logging.Context.Tests
         {
             var messages = new[] { "Hello, World 1", "Hello, World 2" };
             
-            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%x %m%n"));
+            UpdateSettings(s => s.OutputTemplate = OutputTemplate.Parse("%x %m%n"));
 
             var conLog = new ContextualPrefixedILogWrapper(log);
             using (new ContextualLogPrefix("prefix1"))
@@ -201,7 +201,7 @@ namespace Vostok.Logging.Context.Tests
                 conLog.Info(messages[0], new { trace = 134 });
             WaitForOperationCanceled();
 
-            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%l %x %p(trace) %m%n"));
+            UpdateSettings(s => s.OutputTemplate = OutputTemplate.Parse("%l %x %p(trace) %m%n"));
 
             using (new ContextualLogPrefix("prefix2"))
             using (new ContextualLogPrefix("prefix2.2"))
@@ -218,14 +218,14 @@ namespace Vostok.Logging.Context.Tests
         {
             var messages = new[] { "Hello, World 1", "Hello, World 2" };
 
-            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%x %m%n"));
+            UpdateSettings(s => s.OutputTemplate = OutputTemplate.Parse("%x %m%n"));
 
             var conLog = new ContextualPrefixedILogWrapper(log);
             using (new ContextualLogPrefix("prefix"))
                 conLog.Info(messages[0], new { trace = 134 });
             WaitForOperationCanceled();
 
-            UpdateSettings(s => s.ConversionPattern = ConversionPatternParser.Parse("%l %x %p(trace) %m%n"));
+            UpdateSettings(s => s.OutputTemplate = OutputTemplate.Parse("%l %x %p(trace) %m%n"));
 
             conLog.Info(messages[1], new { trace = 134 });
             WaitForOperationCanceled();
