@@ -13,9 +13,9 @@ namespace Vostok.Logging.Context.Tests
         {
             const string prefixName = "some_prefix";
             var prefix = new ContextualLogPrefix(prefixName, true);
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName);
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName);
             prefix.Dispose();
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
         }
 
         [Test]
@@ -25,11 +25,11 @@ namespace Vostok.Logging.Context.Tests
             const string prefixName2 = "some_prefix_2";
             var prefix1 = new ContextualLogPrefix(prefixName1, true);
             var prefix2 = new ContextualLogPrefix(prefixName2, false);
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName1, prefixName2);
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName1, prefixName2);
             prefix2.Dispose();
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
             prefix1.Dispose();
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
         }
 
         [Test]
@@ -39,11 +39,11 @@ namespace Vostok.Logging.Context.Tests
             const string prefixName2 = "some_prefix_2";
             var prefix1 = new ContextualLogPrefix(prefixName1, true);
             var prefix2 = new ContextualLogPrefix(prefixName2, true);
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName1, prefixName2);
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName1, prefixName2);
             prefix2.Dispose();
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName1);
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeEquivalentTo(prefixName1);
             prefix1.Dispose();
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey).Should().BeNull();
         }
     }
 }

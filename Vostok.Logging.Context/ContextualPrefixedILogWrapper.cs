@@ -14,7 +14,7 @@ namespace Vostok.Logging.Context
         public ILog BaseLog { get; }
 
         public static IReadOnlyList<string> Prefix =>
-            FlowingContext.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey);
+            FlowingContext.Properties.Get<IReadOnlyList<string>>(ContextualLogPrefix.PrefixKey);
 
         public void Log(LogEvent @event)
         {

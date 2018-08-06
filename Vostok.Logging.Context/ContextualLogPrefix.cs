@@ -14,9 +14,8 @@ namespace Vostok.Logging.Context
 
         public ContextualLogPrefix([NotNull] string prefix, bool needRestoreContext = true)
         {
-            FlowingContext.SetOverwriteMode(true);
             this.needRestoreContext = needRestoreContext;
-            oldPrefix = FlowingContext.Get<IReadOnlyList<string>>(PrefixKey);
+            oldPrefix = FlowingContext.Properties.Get<IReadOnlyList<string>>(PrefixKey);
             IReadOnlyList<string> newPrefix = null;
             if (oldPrefix == null || oldPrefix.Count == 0)
                 newPrefix = new[] {prefix};
@@ -26,16 +25,15 @@ namespace Vostok.Logging.Context
                 list.Add(prefix);
                 newPrefix = list;
             }
-            FlowingContext.Set(PrefixKey, newPrefix);
+            FlowingContext.Properties.Set(PrefixKey, newPrefix);
         }
 
         public void Dispose()
         {
-            FlowingContext.SetOverwriteMode(true);
             if (needRestoreContext && oldPrefix != null && oldPrefix.Count > 0)
-                FlowingContext.Set(PrefixKey, oldPrefix);
+                FlowingContext.Properties.Set(PrefixKey, oldPrefix);
             else
-                FlowingContext.Remove(PrefixKey);
+                FlowingContext.Properties.Remove(PrefixKey);
         }
     }
 }
