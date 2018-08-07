@@ -36,10 +36,15 @@
     <PackageProjectUrl>https://github.com/vostok/logging.context</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/vostok/logging.context/blob/master/LICENSE</PackageLicenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageTags>vostok vostok.logging.context</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/vostok/devtools/master/assets/Vostok-icon.png</PackageIconUrl>
+    <PackageTags>vostok vostok.logging vostok.context</PackageTags>
     <RepositoryUrl>https://github.com/vostok/logging.context</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\vostok.devtools\jetbrains-annotations\JetBrainsAnnotations.cs" Link="Annotations\JetBrainsAnnotations.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Vostok.Context">
