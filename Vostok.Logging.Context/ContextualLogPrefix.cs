@@ -4,8 +4,6 @@ using Vostok.Context;
 
 namespace Vostok.Logging.Context
 {
-    // TODO(iloktionov): unit tests
-
     /// <summary>
     /// <para>Creating an instance of <see cref="ContextualLogPrefix"/> sets a new global log prefix property in <see cref="FlowingContext"/> by adding a new segment to the current prefix.</para>
     /// <para>The value is enclosed in square brackets before appending and separated by a space from previous value. A trailing space is also added for nicer formatting.</para>
@@ -33,13 +31,13 @@ namespace Vostok.Logging.Context
         /// </summary>
         [CanBeNull]
         public static string Current 
-            => FlowingContext.Globals.Get<ContextualPrefixValue>().Value;
+            => FlowingContext.Globals.Get<ContextualPrefixValue>()?.Value;
 
         /// <summary>
         /// Drops current contextual log prefix in <see cref="FlowingContext"/>.
         /// </summary>
         public static void Drop()
-            => FlowingContext.Globals.Set(default(ContextualPrefixValue));
+            => FlowingContext.Globals.Set(null as ContextualPrefixValue);
 
         /// <summary>
         /// Restores the value of contextual log prefix in <see cref="FlowingContext"/> that was captured in constructor.
