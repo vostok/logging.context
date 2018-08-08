@@ -36,7 +36,7 @@ namespace Vostok.Logging.Context
 
         public static ILog WithContextualPrefix([NotNull] this ILog log)
         {
-            return log.WithFlowingContextGlobal<ContextualPrefixValue>(WellKnownProperties.ContextualPrefix);
+            return log.WithProperty(WellKnownProperties.ContextualPrefix, () => ContextualLogPrefix.Current, true);
         }
     }
 }
