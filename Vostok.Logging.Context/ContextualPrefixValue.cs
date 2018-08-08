@@ -1,7 +1,5 @@
 ﻿namespace Vostok.Logging.Context
 {
-    // TODO(iloktionov): unit tests
-
     internal class ContextualPrefixValue
     {
         private ContextualPrefixValue(string value)
