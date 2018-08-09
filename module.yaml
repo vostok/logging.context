@@ -1,0 +1,19 @@
+notests *default:
+  build:
+    target: Vostok.Logging.Context.sln
+    configuration: NoTests
+    tool:
+      name: dotnet
+
+  install:
+    - Vostok.Logging.Context/bin/Release/netstandard2.0/Vostok.Logging.Context.dll
+
+  deps:
+    - vostok.context
+    - vostok.logging.abstractions
+	- vostok.devtools
+
+full-build > notests:
+  build:
+    target: Vostok.Logging.Context.sln
+    configuration: Release
