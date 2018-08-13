@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 using Vostok.Context;
 using Vostok.Logging.Abstractions;
@@ -23,9 +22,7 @@ namespace Vostok.Logging.Context
             bool allowOverwrite = false,
             bool allowNullValues = false)
         {
-            // TODO(iloktionov): implement allowNullValues
-
-            return log.WithProperty(logPropertyName, () => FlowingContext.Globals.Get<T>(), allowOverwrite);
+            return log.WithProperty(logPropertyName, () => FlowingContext.Globals.Get<T>(), allowOverwrite, allowNullValues);
         }
 
         /// <summary>
@@ -41,9 +38,7 @@ namespace Vostok.Logging.Context
             bool allowOverwrite = false,
             bool allowNullValues = false)
         {
-            // TODO(iloktionov): implement allowNullValues
-
-            return log.WithProperty(logPropertyName ?? contextPropertyName, () => GetContextPropertyOrNull(contextPropertyName), allowOverwrite);
+            return log.WithProperty(logPropertyName ?? contextPropertyName, () => GetContextPropertyOrNull(contextPropertyName), allowOverwrite, allowNullValues);
         }
 
         /// <summary>
@@ -57,9 +52,7 @@ namespace Vostok.Logging.Context
             bool allowOverwrite = false,
             bool allowNullValues = false)
         {
-            // TODO(iloktionov): implement allowNullValues
-
-            return log.WithProperties(() => names.Select(name => (name, GetContextPropertyOrNull(name))), allowOverwrite);
+            return log.WithProperties(() => names.Select(name => (name, GetContextPropertyOrNull(name))), allowOverwrite, allowNullValues);
         }
 
         /// <summary>
@@ -72,9 +65,7 @@ namespace Vostok.Logging.Context
             bool allowOverwrite = false,
             bool allowNullValues = false)
         {
-            // TODO(iloktionov): implement allowNullValues
-
-            return log.WithProperties(() => FlowingContext.Properties.Current.Select(pair => (pair.Key, pair.Value)), allowOverwrite);
+            return log.WithProperties(() => FlowingContext.Properties.Current.Select(pair => (pair.Key, pair.Value)), allowOverwrite, allowNullValues);
         }
 
         /// <summary>
