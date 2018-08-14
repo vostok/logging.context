@@ -1,12 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Vostok.Context;
 using Vostok.Logging.Abstractions;
 
 namespace Vostok.Logging.Context
 {
-    // TODO(iloktionov): unit tests
-
     [PublicAPI]
     public static class ContextualLogExtensions
     {
@@ -52,7 +51,7 @@ namespace Vostok.Logging.Context
             bool allowOverwrite = false,
             bool allowNullValues = false)
         {
-            return log.WithProperties(() => names.Select(name => (name, GetContextPropertyOrNull(name))), allowOverwrite, allowNullValues);
+            return log.WithProperties(() => GetContextProperties(names), allowOverwrite, allowNullValues);
         }
 
         /// <summary>
@@ -80,6 +79,17 @@ namespace Vostok.Logging.Context
         private static object GetContextPropertyOrNull(string name)
         {
             return FlowingContext.Properties.Current.TryGetValue(name, out var value) ? value : null;
-        } 
+        }
+
+        private static IEnumerable<(string, object)> GetContextProperties(string[] names)
+        {
+            var currentProperties = FlowingContext.Properties.Current;
+
+            foreach (var name in names)
+            {
+                if (currentProperties.TryGetValue(name, out var value))
+                    yield return (name, value);
+            }
+        }
     }
 }
