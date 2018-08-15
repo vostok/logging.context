@@ -7,11 +7,12 @@ notests *default:
 
   install:
     - Vostok.Logging.Context/bin/Release/netstandard2.0/Vostok.Logging.Context.dll
+    - module vostok.logging.abstractions
 
   deps:
+    - vostok.devtools
     - vostok.context
     - vostok.logging.abstractions
-    - vostok.devtools
 
 full-build > notests:
   build:
