@@ -14,8 +14,8 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Title>Vostok logging context library</Title>
-    <Description>Logging context library for microservice toolkit http://vostok.tools/</Description>
+    <Title>Vostok.Logging.Context</Title>
+    <Description>Integration with Vostok.Context library: ambient context prefixes, properties enrichment.</Description>
   </PropertyGroup>
 
   <PropertyGroup>
