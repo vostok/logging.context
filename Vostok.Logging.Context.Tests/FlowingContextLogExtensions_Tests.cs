@@ -10,7 +10,7 @@ using Vostok.Logging.Abstractions;
 namespace Vostok.Logging.Context.Tests
 {
     [TestFixture]
-    internal class ContextualLogExtensions_Tests
+    internal class FlowingContextLogExtensions_Tests
     {
         private ILog baseLog;
         private ILog enrichedLog;
@@ -360,34 +360,6 @@ namespace Vostok.Logging.Context.Tests
 
             value1.Should().BeNull();
             value2.Should().BeNull();
-        }
-
-        [Test]
-        public void WithContextualPrefix_should_return_a_log_that_does_not_modify_events_when_there_is_no_contextual_prefix()
-        {
-            ContextualLogPrefix.Drop();
-
-            enrichedLog = baseLog.WithContextualPrefix();
-
-            enrichedLog.Log(originalEvent);
-
-            observedEvent.Should().BeSameAs(originalEvent);
-        }
-
-        [Test]
-        public void WithContextualPrefix_should_return_a_log_that_adds_current_contextual_log_prefix_to_events()
-        {
-            ContextualLogPrefix.Drop();
-
-            enrichedLog = baseLog.WithContextualPrefix();
-
-            using (new ContextualLogPrefix("p1"))
-            using (new ContextualLogPrefix("p2"))
-            {
-                enrichedLog.Log(originalEvent);
-            }
-
-            observedEvent.Properties?[WellKnownProperties.ContextualPrefix].Should().Be("[p1] [p2] ");
         }
     }
 }

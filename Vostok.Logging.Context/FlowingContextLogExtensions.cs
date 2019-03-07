@@ -7,7 +7,7 @@ using Vostok.Logging.Abstractions;
 namespace Vostok.Logging.Context
 {
     [PublicAPI]
-    public static class ContextualLogExtensions
+    public static class FlowingContextLogExtensions
     {
         /// <summary>
         /// <para>Returns a wrapper log that adds a value of global property of type <typeparamref name="T"/> from <see cref="FlowingContext"/> to each <see cref="LogEvent"/> before logging.</para>
@@ -65,15 +65,6 @@ namespace Vostok.Logging.Context
             bool allowNullValues = false)
         {
             return log.WithProperties(() => FlowingContext.Properties.Current.Select(pair => (pair.Key, pair.Value)), allowOverwrite, allowNullValues);
-        }
-
-        /// <summary>
-        /// <para>Returns a wrapper log that adds a <see cref="WellKnownProperties.ContextualPrefix"/> property from <see cref="FlowingContext"/> to each <see cref="LogEvent"/> before logging.</para>
-        /// <para>See <see cref="ContextualLogPrefix"/> for more info.</para>
-        /// </summary>
-        public static ILog WithContextualPrefix([NotNull] this ILog log)
-        {
-            return log.WithProperty(WellKnownProperties.ContextualPrefix, () => ContextualLogPrefix.Current, true);
         }
 
         private static object GetContextPropertyOrNull(string name)
