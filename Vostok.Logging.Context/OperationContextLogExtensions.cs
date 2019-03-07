@@ -11,6 +11,7 @@ namespace Vostok.Logging.Context
         /// <summary>
         /// <para>Returns a wrapper log that adds an <see cref="WellKnownProperties.OperationContext"/> property from <see cref="FlowingContext"/>'s global <see cref="OperationContextValue"/> to each <see cref="LogEvent"/> before logging.</para>
         /// <para>See <see cref="OperationContextToken"/> for more info on how to leverage operation contexts.</para>
+        /// <para>Use <see cref="ForOperationContext"/> extension to easily create operation contexts.</para>
         /// </summary>
         public static ILog WithOperationContext([NotNull] this ILog log)
             => log.WithProperty(WellKnownProperties.OperationContext, () => FlowingContext.Globals.Get<OperationContextValue>(), true);
