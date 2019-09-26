@@ -7,7 +7,7 @@
     <LangVersion>7.2</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
-    <VersionPrefix>1.0.1</VersionPrefix>
+    <VersionPrefix>1.0.2</VersionPrefix>
   </PropertyGroup>
   <PropertyGroup>
     <Title>Vostok.Logging.Context</Title>
