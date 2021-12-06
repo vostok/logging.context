@@ -1,3 +1,7 @@
+## 1.0.2 (06-12-2021):
+
+Added `net6.0` target.
+
 ## 1.0.1 (26.09.2019):
 
 * Fixed lowerCamelCase `WellKnownProperties`.
