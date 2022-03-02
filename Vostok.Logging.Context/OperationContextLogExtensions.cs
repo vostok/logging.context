@@ -26,7 +26,7 @@ namespace Vostok.Logging.Context
         /// </summary>
         public static OperationContextToken ForOperationContext([NotNull] this ILog log, [NotNull] string operationContext)
             => new OperationContextToken(operationContext);
-        
+
         /// <summary>
         /// <para>This extension is just a convenience method for creating <see cref="OperationContextToken"/>s and does not depend on provided <see cref="ILog"/> instance.</para>
         /// <para>Use <see cref="WithOperationContext"/> to enable operation contexts on your log.</para>
@@ -34,7 +34,7 @@ namespace Vostok.Logging.Context
         /// </summary>
         public static OperationContextToken ForOperationContext([NotNull] this ILog log, [NotNull] string operationContext, [CanBeNull] object properties)
             => new OperationContextToken(operationContext, properties);
-        
+
         /// <summary>
         /// <para>This extension is just a convenience method for creating <see cref="OperationContextToken"/>s and does not depend on provided <see cref="ILog"/> instance.</para>
         /// <para>Use <see cref="WithOperationContext"/> to enable operation contexts on your log.</para>

@@ -23,14 +23,14 @@ namespace Vostok.Logging.Context
         /// </summary>
         public OperationContextToken([NotNull] string operationContext)
             => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + operationContext);
-        
+
         /// <summary>
         /// <para>Sets a new global <see cref="OperationContextValue"/> in <see cref="FlowingContext"/> by adding given <paramref name="operationContextTemplate"/> with given <paramref name="properties" /> to the current one. The <paramref name="operationContextTemplate"/> can contain placeholders for <paramref name="properties"/>.</para>
         /// <para>This constructor also captures current <see cref="OperationContextValue"/> which will be restored later when calling <see cref="Dispose"/>.</para>
         /// </summary>
         public OperationContextToken([NotNull] string operationContextTemplate, [CanBeNull] object properties)
             => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + (operationContextTemplate, OperationContextValue.CreateProperties(operationContextTemplate, properties)));
-        
+
         /// <summary>
         /// <para>Sets a new global <see cref="OperationContextValue"/> in <see cref="FlowingContext"/> by adding given <paramref name="operationContextTemplate"/> with given <paramref name="parameters" /> to the current one. The <paramref name="operationContextTemplate"/> can contain placeholders for <paramref name="parameters"/>.</para>
         /// <para>This constructor also captures current <see cref="OperationContextValue"/> which will be restored later when calling <see cref="Dispose"/>.</para>
