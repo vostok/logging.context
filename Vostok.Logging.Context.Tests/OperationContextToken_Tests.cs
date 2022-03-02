@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using NUnit.Framework;
 using Vostok.Context;
 using Vostok.Logging.Abstractions.Values;
@@ -9,7 +10,7 @@ namespace Vostok.Logging.Context.Tests
     internal class OperationContextToken_Tests
     {
         [SetUp]
-        public void TestSetup()
+        public void SetUp()
         {
             FlowingContext.Globals.Set(null as OperationContextValue);
         }
@@ -40,5 +41,76 @@ namespace Vostok.Logging.Context.Tests
 
             FlowingContext.Globals.Get<OperationContextValue>().Should().BeNull();
         }
+
+        [Test]
+        public void Should_work_with_object_properties()
+        {
+            using (new OperationContextToken("Hello {Name1} {Name2}",
+                       new
+                       {
+                           Name1 = "Vostok",
+                           Name2 = 42,
+                           Name3 = "Up"
+                       }))
+            {
+                var value = FlowingContext.Globals.Get<OperationContextValue>();
+
+                value.Should().NotBeNull();
+                
+                value.Should().Equal("Hello {Name1} {Name2}");
+                
+                value!.Properties.Should()
+                    .BeEquivalentTo(new Dictionary<string, object>
+                    {
+                        ["Name1"] = "Vostok",
+                        ["Name2"] = 42,
+                        ["Name3"] = "Up"
+                    });
+            }
+        }
+        
+        [Test]
+        public void Should_work_with_parameters_properties()
+        {
+            using (new OperationContextToken("Hello {Name1} {Name2}", "Vostok", 42))
+            {
+                var value = FlowingContext.Globals.Get<OperationContextValue>();
+
+                value.Should().NotBeNull();
+                
+                value.Should().Equal("Hello {Name1} {Name2}");
+                
+                value!.Properties.Should()
+                    .BeEquivalentTo(new Dictionary<string, object>
+                    {
+                        ["Name1"] = "Vostok",
+                        ["Name2"] = 42
+                    });
+            }
+        }
+
+#if NET6_0
+        [Test]
+        public void Should_work_with_interpolated_properties()
+        {
+            var Name1 = "Vostok";
+            var Name2 = 42;
+            using (new OperationContextToken($"Hello {Name1} {Name2}"))
+            {
+                var value = FlowingContext.Globals.Get<OperationContextValue>();
+
+                value.Should().NotBeNull();
+                
+                value.Should().Equal("Hello {Name1} {Name2}");
+                
+                value!.Properties.Should()
+                    .BeEquivalentTo(new Dictionary<string, object>
+                    {
+                        ["Name1"] = "Vostok",
+                        ["Name2"] = 42
+                    });
+            }
+        }
+#endif
     }
 }
