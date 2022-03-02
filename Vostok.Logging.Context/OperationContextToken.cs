@@ -18,11 +18,22 @@ namespace Vostok.Logging.Context
         private readonly OperationContextValue old;
 
         /// <summary>
-        /// <para>Sets a new global <see cref="OperationContextValue"/> in <see cref="FlowingContext"/> by adding given <paramref name="value"/> to the current one.</para>
+        /// <para>Sets a new global <see cref="OperationContextValue"/> in <see cref="FlowingContext"/> by adding given <paramref name="operationContext"/> to the current one.</para>
         /// <para>This constructor also captures current <see cref="OperationContextValue"/> which will be restored later when calling <see cref="Dispose"/>.</para>
         /// </summary>
-        public OperationContextToken([NotNull] string value)
-            => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + value);
+        public OperationContextToken([NotNull] string operationContext)
+            => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + operationContext);
+        
+        public OperationContextToken([NotNull] string operationContextTemplate, [CanBeNull] object properties)
+            => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + (operationContextTemplate, OperationContextValue.CreateProperties(operationContextTemplate, properties)));
+        
+        public OperationContextToken([NotNull] string operationContextTemplate, [CanBeNull] params object[] parameters)
+            => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + (operationContextTemplate, OperationContextValue.CreateProperties(operationContextTemplate, parameters)));
+
+#if NET6_0
+        public OperationContextToken(ref OperationContextStringHandler operationContext)
+            => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + (operationContext.Template, operationContext.Properties));
+#endif
 
         /// <summary>
         /// Restores global <see cref="OperationContextValue"/> in <see cref="FlowingContext"/> to the one captured in constructor.
