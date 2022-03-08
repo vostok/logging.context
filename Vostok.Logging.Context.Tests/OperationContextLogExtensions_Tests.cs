@@ -49,8 +49,26 @@ namespace Vostok.Logging.Context.Tests
                 enrichedLog.Log(originalEvent);
             }
 
-            observedEvent.Properties?[WellKnownProperties.OperationContext]
+            observedEvent.Properties![WellKnownProperties.OperationContext]
                 .Should().BeOfType<OperationContextValue>().Which.Should().Equal("op1", "op2");
+        }
+        
+        [Test]
+        public void WithOperationContext_should_return_a_log_that_adds_current_operation_context_properties_to_events()
+        {
+            enrichedLog = baseLog.WithOperationContext();
+
+            using (new OperationContextToken("aa {Name1} bb", "Vostok"))
+            using (new OperationContextToken("aa {Name2} bb", 42))
+            {
+                enrichedLog.Log(originalEvent);
+            }
+
+            observedEvent.Properties![WellKnownProperties.OperationContext]
+                .Should().BeOfType<OperationContextValue>().Which.Should().Equal("aa {Name1} bb", "aa {Name2} bb");
+
+            observedEvent.Properties!["Name1"].Should().Be("Vostok");
+            observedEvent.Properties!["Name2"].Should().Be(42);
         }
     }
 }
