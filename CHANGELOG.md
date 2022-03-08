@@ -1,3 +1,7 @@
+## 1.0.4 (08-03-2022):
+
+Passed `Properties` field to `OperationContextValue`.
+
 ## 1.0.3 (06-12-2021):
 
 Added `net6.0` target.
