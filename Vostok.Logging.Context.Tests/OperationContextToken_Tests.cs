@@ -89,7 +89,7 @@ namespace Vostok.Logging.Context.Tests
             }
         }
 
-#if NET6_0
+#if NET6_0_OR_GREATER
         [Test]
         public void Should_work_with_interpolated_properties()
         {

@@ -43,7 +43,7 @@ namespace Vostok.Logging.Context
         public static OperationContextToken ForOperationContext([NotNull] this ILog log, [NotNull] string operationContext, [CanBeNull] params object[] parameters)
             => new OperationContextToken(operationContext, parameters);
 
-#if NET6_0
+#if NET6_0_OR_GREATER
         /// <summary>
         /// <para>This extension is just a convenience method for creating <see cref="OperationContextToken"/>s and does not depend on provided <see cref="ILog"/> instance.</para>
         /// <para>Use <see cref="WithOperationContext"/> to enable operation contexts on your log.</para>
