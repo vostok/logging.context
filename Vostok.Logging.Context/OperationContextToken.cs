@@ -38,7 +38,7 @@ namespace Vostok.Logging.Context
         public OperationContextToken([NotNull] string operationContextTemplate, [CanBeNull] params object[] parameters)
             => FlowingContext.Globals.Set((old = FlowingContext.Globals.Get<OperationContextValue>()) + (operationContextTemplate, OperationContextValue.CreateProperties(operationContextTemplate, parameters)));
 
-#if NET6_0
+#if NET6_0_OR_GREATER
         /// <summary>
         /// <para>Sets a new global <see cref="OperationContextValue"/> in <see cref="FlowingContext"/> by adding given <paramref name="operationContext"/> as interpolated string to the current one.</para>
         /// <para>This constructor also captures current <see cref="OperationContextValue"/> which will be restored later when calling <see cref="Dispose"/>.</para>
