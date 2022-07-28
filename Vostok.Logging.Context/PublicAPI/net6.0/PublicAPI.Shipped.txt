@@ -1,0 +1,18 @@
+static Vostok.Logging.Context.FlowingContextLogExtensions.WithAllFlowingContextProperties(this Vostok.Logging.Abstractions.ILog log, bool allowOverwrite = false, bool allowNullValues = false) -> Vostok.Logging.Abstractions.ILog
+static Vostok.Logging.Context.FlowingContextLogExtensions.WithFlowingContextGlobal<T>(this Vostok.Logging.Abstractions.ILog log, string logPropertyName, bool allowOverwrite = false, bool allowNullValues = false) -> Vostok.Logging.Abstractions.ILog
+static Vostok.Logging.Context.FlowingContextLogExtensions.WithFlowingContextProperties(this Vostok.Logging.Abstractions.ILog log, string[] names, bool allowOverwrite = false, bool allowNullValues = false) -> Vostok.Logging.Abstractions.ILog
+static Vostok.Logging.Context.FlowingContextLogExtensions.WithFlowingContextProperty(this Vostok.Logging.Abstractions.ILog log, string contextPropertyName, string logPropertyName = null, bool allowOverwrite = false, bool allowNullValues = false) -> Vostok.Logging.Abstractions.ILog
+static Vostok.Logging.Context.OperationContextLogExtensions.ForOperationContext(this Vostok.Logging.Abstractions.ILog log, ref Vostok.Logging.Abstractions.Values.OperationContextStringHandler operationContext) -> Vostok.Logging.Context.OperationContextToken
+static Vostok.Logging.Context.OperationContextLogExtensions.ForOperationContext(this Vostok.Logging.Abstractions.ILog log, string operationContext) -> Vostok.Logging.Context.OperationContextToken
+static Vostok.Logging.Context.OperationContextLogExtensions.ForOperationContext(this Vostok.Logging.Abstractions.ILog log, string operationContext, object properties) -> Vostok.Logging.Context.OperationContextToken
+static Vostok.Logging.Context.OperationContextLogExtensions.ForOperationContext(this Vostok.Logging.Abstractions.ILog log, string operationContext, params object[] parameters) -> Vostok.Logging.Context.OperationContextToken
+static Vostok.Logging.Context.OperationContextLogExtensions.WithOperationContext(this Vostok.Logging.Abstractions.ILog log) -> Vostok.Logging.Abstractions.ILog
+Vostok.Logging.Context.FlowingContextLogExtensions
+Vostok.Logging.Context.OperationContextLogExtensions
+Vostok.Logging.Context.OperationContextToken
+Vostok.Logging.Context.OperationContextToken.Dispose() -> void
+Vostok.Logging.Context.OperationContextToken.OperationContextToken() -> void
+Vostok.Logging.Context.OperationContextToken.OperationContextToken(ref Vostok.Logging.Abstractions.Values.OperationContextStringHandler operationContext) -> void
+Vostok.Logging.Context.OperationContextToken.OperationContextToken(string operationContext) -> void
+Vostok.Logging.Context.OperationContextToken.OperationContextToken(string operationContextTemplate, object properties) -> void
+Vostok.Logging.Context.OperationContextToken.OperationContextToken(string operationContextTemplate, params object[] parameters) -> void
