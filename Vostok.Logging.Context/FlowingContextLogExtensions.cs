@@ -67,10 +67,10 @@ namespace Vostok.Logging.Context
             return log.WithProperties(() => FlowingContext.Properties.Current.Select(pair => (pair.Key, pair.Value)), allowOverwrite, allowNullValues);
         }
 
-        private static IEnumerable<(string, object)> GetContextPropertyIfExists(string name, string logPropertyName)
+        private static IEnumerable<(string, object)> GetContextPropertyIfExists(string contextPropertyName, string logPropertyName)
         {
-            if (FlowingContext.Properties.Current.TryGetValue(name, out var value))
-                yield return (logPropertyName ?? name, value);
+            if (FlowingContext.Properties.Current.TryGetValue(contextPropertyName, out var value))
+                yield return (logPropertyName ?? contextPropertyName, value);
         }
 
         private static IEnumerable<(string, object)> GetContextProperties(string[] names)
