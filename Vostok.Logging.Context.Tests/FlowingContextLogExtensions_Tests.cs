@@ -195,6 +195,16 @@ namespace Vostok.Logging.Context.Tests
         }
 
         [Test]
+        public void WithFlowingContextProperty_should_skip_non_existent_properties_when_null_values_allowed()
+        {
+            enrichedLog = baseLog.WithFlowingContextProperty(Guid.NewGuid().ToString(), allowNullValues: true);
+
+            enrichedLog.Log(originalEvent);
+
+            observedEvent.Should().BeSameAs(originalEvent);
+        }
+
+        [Test]
         public void WithFlowingContextProperties_should_return_a_log_that_adds_given_context_properties_to_events()
         {
             FlowingContext.Properties.Set(propertyName1, "value1");
