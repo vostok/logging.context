@@ -37,7 +37,7 @@ namespace Vostok.Logging.Context
             bool allowOverwrite = false,
             bool allowNullValues = false)
         {
-            return log.WithProperty(logPropertyName ?? contextPropertyName, () => GetContextPropertyOrNull(contextPropertyName), allowOverwrite, allowNullValues);
+            return log.WithProperties(() => GetContextPropertyIfExists(contextPropertyName, logPropertyName), allowOverwrite, allowNullValues);
         }
 
         /// <summary>
@@ -67,9 +67,10 @@ namespace Vostok.Logging.Context
             return log.WithProperties(() => FlowingContext.Properties.Current.Select(pair => (pair.Key, pair.Value)), allowOverwrite, allowNullValues);
         }
 
-        private static object GetContextPropertyOrNull(string name)
+        private static IEnumerable<(string, object)> GetContextPropertyIfExists(string name, string logPropertyName)
         {
-            return FlowingContext.Properties.Current.TryGetValue(name, out var value) ? value : null;
+            if (FlowingContext.Properties.Current.TryGetValue(name, out var value))
+                yield return (logPropertyName ?? name, value);
         }
 
         private static IEnumerable<(string, object)> GetContextProperties(string[] names)
