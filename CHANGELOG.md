@@ -1,3 +1,7 @@
+## 1.0.5 (23-11-2022):
+
+Skip non-existent context property in `FlowingContextLogExtensions.WithFlowingContextProperty()` when `allowNullValues` is true
+
 ## 1.0.4 (08-03-2022):
 
 Passed `Properties` field to `OperationContextValue`.
