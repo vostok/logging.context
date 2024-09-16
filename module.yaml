@@ -10,14 +10,11 @@ notests *default:
     - module vostok.logging.abstractions
 
   deps:
-    - vostok.devtools
+    - vostok.devtools@net8.0
     - vostok.context
     - vostok.logging.abstractions
 
 full-build > notests:
-  deps:
-    - -vostok.devtools
-    - vostok.devtools@with-net6.0
 
   build:
     target: Vostok.Logging.Context.sln
