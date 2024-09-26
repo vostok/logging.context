@@ -10,7 +10,7 @@ notests *default:
     - module vostok.logging.abstractions
 
   deps:
-    - vostok.devtools@net8.0
+    - vostok.devtools
     - vostok.context
     - vostok.logging.abstractions
 
