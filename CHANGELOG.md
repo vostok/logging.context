@@ -1,3 +1,7 @@
+## 1.0.6 (13-12-2024): 
+
+Bump NuGet deps versions
+
 ## 1.0.5 (23-11-2022):
 
 Skip non-existent context property in `FlowingContextLogExtensions.WithFlowingContextProperty()` when `allowNullValues` is true
