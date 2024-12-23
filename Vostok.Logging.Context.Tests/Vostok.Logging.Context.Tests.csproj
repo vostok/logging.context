@@ -17,12 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Vostok.Context">
-      <HintPath>..\..\vostok.context\Vostok.Context\bin\Release\$(ReferencesFramework)\Vostok.Context.dll</HintPath>
-    </Reference>
-    <Reference Include="Vostok.Logging.Abstractions">
-      <HintPath>..\..\vostok.logging.abstractions\Vostok.Logging.Abstractions\bin\Release\$(ReferencesFramework)\Vostok.Logging.Abstractions.dll</HintPath>
-    </Reference>
+    <ModuleReference Include="vostok.context" />
+    <ModuleReference Include="vostok.logging.abstractions" />
   </ItemGroup>
   
 </Project>
